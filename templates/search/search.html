@@ -1,0 +1,40 @@
+{% extends 'header.html' %}
+{% load highlight %}
+
+{% block body %}
+    {% if query %}
+        {% for result in page.object_list %}
+        <div class="jumbotron">
+            <h1 class="text-center"><a href="{{result.object.get_absolute_url}}">{% highlight result.object.title with query %}</a></h1>
+           <div class="text-center">
+               <span><a href="{% url 'blog:category' result.object.category.id%}">{{result.object.category.cname}}</a></span>
+               <span>{{result.object.create_time}}</span>
+               <span>{{result.object.user.username}}</span>
+               <span><a href="{{ result.object.get_absolute_url }}">评论 
+                       <span class="badge">{{result.object.comment_set.all | length}}</span></a>
+                   <span><a href="{{ result.object.get_absolute_url }}">阅读 
+                           <span class="badge">{{ result.object.clickCount}}</span></a>
+           </div>
+           <div>{{result.object.excerpt}}</div>
+           <p class="text-right"><a class="btn btn-success btn-sm" href="{{ result.object.get_absolute_url }}">进入文章</a></p>
+        </div>
+        {% empty %}
+        <p>很抱歉没有找到您要搜索的文章！</p>
+        {% endfor %}
+        {% if page.has_previous or page.has_next %}
+            <nav aria-label="...">
+                <ul class="pager">
+                    {% if page.has_previous %}
+                    <li><a href="?q={{query}}&amp;page={{page.previous_page_number}}">前一页</li>
+                    {% endif %}
+
+                    {% if page.has_next %}
+                    <li><a href="?q={{query}}&amp;page={{page.next_page_number}}">下一页</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    {% else %}
+        <p>请输入关键词,例如: django</p>
+    {% endif %}
+{% endblock %}

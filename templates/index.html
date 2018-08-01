@@ -1,0 +1,47 @@
+{% extends 'header.html' %}
+{% block css %}
+    <style>
+        .content{
+            margin-top:80px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+        {% if error_msg %}
+            <p>{{ error_msg }}</p>
+        {% else %}
+        {% for post in post_list %} 
+        <div class="jumbotron">
+           <h1 class="text-center">{{post.title}}</h1>
+           <div class="text-center">
+               <span><a href="{% url 'blog:category' post.category.id%}">{{post.category}}</a></span>
+               <span>{{post.create_time}}</span>
+               <span>{{post.user.username}}</span>
+               <span><a href="{{ post.get_absolute_url }}">评论 
+                       <span class="badge">{{post.comment_set.all | length}}</span></a>
+                   <span><a href="{{ post.get_absolute_url }}">阅读 
+                           <span class="badge">{{ post.clickCount}}</span></a>
+           </div>
+           <div>{{post.excerpt}}</div>
+           <p class="text-right"><a class="btn btn-success btn-sm" href="{{ post.get_absolute_url }}">进入文章</a></p>
+        </div>
+        {% empty %}
+        <div class="col-xs-9">还没有文章！！！请添加！！！</div>
+        {% endfor %}
+        {% endif %}
+        <nav aria-label="...">
+        <ul class="pager">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}">上一页</a></li>
+                {% endif %}    
+                <li>第{{page_obj.number}}页 / 共{{ paginator.num_pages }}页</li>
+                {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}">下一页</a></li>
+                {% endif %}
+
+            {% endif %}
+        </ul>
+        </nav>
+{% endblock %}
+

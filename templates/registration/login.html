@@ -1,0 +1,48 @@
+<!DOCTYPE html> 
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <title>登陆</title>
+        <link rel="stylesheet" href="https://unpkg.com/mobi.css/dist/mobi.min.css">
+        <style>
+            .errorlist{
+                color:red;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="flex-center">
+            <div class="container">
+                <div class="flex-center">
+                    <div class="unit-1-2 unit-1-on-mobile">
+                        <h3>登陆</h3>
+                        <form class="form" action="{% url 'login' %}" method="post">
+                            {% csrf_token%}
+                            {{ form.non_field_errors }}
+                            {% for field in form %}
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {{ field.error }}
+                                {% if field.help_text %}
+                                   <p class="help text-small text-muted"> {{ field.help_text | safe}}</p>
+                                {% endif %}
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary btn-block">登陆</button>
+                            <input type="hidden" name="next" value="{{ next }}"/>
+                        </form>  
+                        <div class="flex-center top-gap text-small">
+                            <a href = "{% url 'users:register' %}?next={{request.path}}">没有账号请注册</a>
+                        </div>
+                        <div class="flex-center top-gap text-small">
+                            <a href = "{% url 'password_reset' %}">忘记密码?</a>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div> 
+    </body>
+</html>
+
+
+
+
